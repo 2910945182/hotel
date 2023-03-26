@@ -7,11 +7,11 @@
             </div>
             <div class="item">
                 <span>账号:</span>
-                <el-input v-model="loginData.loginId" placeholder="请输入账号" />
+                <el-input v-model="loginData.loginId" />
             </div>
             <div class="item"> 
                 <span>密码:</span>
-                <el-input type="password" v-model="loginData.loginPwd" placeholder="请输入密码" />
+                <el-input type="password" v-model="loginData.loginPwd" />
             </div>
             <div class="item">
                 <el-checkbox v-model="loginData.ckMe" label="记住密码"></el-checkbox>
