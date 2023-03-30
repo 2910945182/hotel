@@ -12,7 +12,7 @@ import ResetPwd from '../views/admin/ResetPwd.vue'
 import Error404 from '../views/Error404.vue'
 import RoomType from '../views/roomType/RoomType.vue'
 import Room from '../views/room/Room.vue'
-import Test from '../views/Test.vue'
+// import Test from '../views/Test.vue'
 import Permission from '../views/permission/Permission.vue'
 
 // 导入pinia
@@ -150,10 +150,10 @@ const routes = [
     //     component: Error404
     // },
     // 测试页面
-    {
-        path: '/test',
-        component: Test
-    }
+    // {
+    //     path: '/test',
+    //     component: Test
+    // }
 ]
 
 const router = createRouter({
