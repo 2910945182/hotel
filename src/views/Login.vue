@@ -26,18 +26,23 @@
 </template>
 
 <script setup>
+// 导入组合式api
 import { reactive, onBeforeMount } from "vue";
+// 导入访问后台api
 import { login, LoginAuto } from "../api/admin";
 import { useRouter } from "vue-router";
 
+// 获取当前项目中的路由器对象
 let router = useRouter();
 
+// 页面挂载之前
 onBeforeMount(async () => {
     if(await LoginAuto()){
         router.push('/layout')
     }
 })
 
+// 定义登录数据
 let loginData = reactive({
     loginId: '',
     loginPwd: '',
@@ -46,7 +51,9 @@ let loginData = reactive({
 
 // 管理员登录方法
 let adminLogin = async () => {
+    // 调用登录api,返回是否登录成功
     let success = await login(loginData);
+    // 登录成功,跳转到布局页
     if (success) {
         router.push("/layout");
     }

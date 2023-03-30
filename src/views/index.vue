@@ -8,6 +8,7 @@ import { LoginAuto } from "../api/admin";
 import { useRouter } from 'vue-router'
 
 let router = useRouter()
+
 onBeforeMount(async () => {
     if (await LoginAuto()) {
         router.push("/layout");

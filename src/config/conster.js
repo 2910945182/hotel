@@ -16,3 +16,9 @@ export const admin_upload_url = BASE_URL + 'Admin/UploadImg'
 
 // 账户头像地址
 export const admin_photo_base_url = BASE_URL + 'upload/admin/'
+
+// 房间照片上传地址
+export const room_upload_url = BASE_URL + 'RoomImg/UploadImg'
+
+// 查看房间照片地址
+export const room_photo_base_url = BASE_URL + 'upload/room/'

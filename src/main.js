@@ -5,6 +5,7 @@ import 'element-plus/dist/index.css'
 import '../src/assets/gloable.css'
 import Router from './router/index.js'
 import App from './App.vue'
+// import './mock/index'
 
 const app = createApp(App)
 

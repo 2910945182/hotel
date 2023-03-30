@@ -14,6 +14,7 @@
                         <template #title>
                             <span>账户管理</span>
                         </template>
+                        <!-- v-if="this.store.state.admin.admin.roleId===1" -->
                         <el-menu-item index="/layout/role">角色管理</el-menu-item>
                         <el-menu-item index="/layout/admin">账户管理</el-menu-item>
                     </el-sub-menu>
@@ -22,6 +23,7 @@
                         <template #title>
                             <span>客房管理</span>
                         </template>
+                        <!-- v-if="this.store.state.admin.admin.roleId===1" -->
                         <el-menu-item index="/layout/roomType">类型管理</el-menu-item>
                         <el-menu-item index="/layout/room">客房管理</el-menu-item>
                     </el-sub-menu>
@@ -30,14 +32,15 @@
                         <template #title>
                             <span>顾客管理</span>
                         </template>
-                        <el-menu-item index="">顾客管理</el-menu-item>
+                        <el-menu-item index="/layout/guest">顾客管理</el-menu-item>
                     </el-sub-menu>
 
+                    <!-- v-if="this.store.state.admin.admin.roleId===1" -->
                     <el-sub-menu index="4">
                         <template #title>
                             <span>权限管理</span>
                         </template>
-                        <el-menu-item index="">权限管理</el-menu-item>
+                        <el-menu-item index="/layout/permission">权限管理</el-menu-item>
                     </el-sub-menu>
 
                 </el-menu>
@@ -57,7 +60,7 @@
                         <el-sub-menu index="4">
                             <template #title>{{ log.admin.name }}</template>
                             <el-menu-item index="/layout/mine">个人中心</el-menu-item>
-                            <el-menu-item index="" @click="$router.push('layout/resetPwd')">修改密码</el-menu-item>
+                            <el-menu-item @click="$router.push('layout/resetPwd')">修改密码</el-menu-item>
                             <el-menu-item index="4-3" @click="exit">退出系统</el-menu-item>
                         </el-sub-menu>
 
@@ -80,18 +83,22 @@
 </template>
 
 <script setup>
-import { reactive, toRefs, computed, onBeforeMount } from 'vue'
+import { reactive ,computed, onBeforeMount } from 'vue'
 import { useColorStore } from '../store/theme01'
 import { useLoginStore } from '../store/admin'
+// 导入路由器对象
 import { useRouter } from 'vue-router'
+// 导入api方法
 import { getOne } from '../api/admin'
 
+// 返回一个全局状态管理对象
 let store = useColorStore()
-
 let log = useLoginStore()
 
+// 返回一个路由器对象
 let router = useRouter()
 
+// 获取浏览器缓存中的颜色
 if (localStorage.getItem('colorName') && localStorage.getItem('color')) {
     let color = {
         name: localStorage.getItem('colorName'),
@@ -100,7 +107,9 @@ if (localStorage.getItem('colorName') && localStorage.getItem('color')) {
     store.currentThemeColor.color = color.color
 }
 
+// 定义数据
 let data = reactive({
+    // 左侧菜单是否折叠
     isCollapse: false
 })
 
@@ -111,17 +120,22 @@ let currentThemeColor = computed(() => {
 
 // 切换主题的方法
 let changeTheme = (index) => {
+    // 将获取到的颜色主题保存到浏览器缓存中
     localStorage.setItem('colorName', store.colors[index].name)
     localStorage.setItem('color', store.colors[index].color)
+    // 根据index,获取对应的颜色主题
     let { name, color } = store.colors[index]
+    // 将该颜色主题赋值给当前颜色主题
     store.currentThemeColor.name = name;
     store.currentThemeColor.color = color;
 }
 
 // 退出系统
 let exit = () => {
+    // 清除所有浏览器缓存
     sessionStorage.clear()
     localStorage.clear()
+    // 跳转到登录页
     router.push('/login')
 }
 
@@ -135,7 +149,15 @@ onBeforeMount(async () => {
     // 获取登录账号
     let loginId = localStorage.getItem('loginId')
     let r = await getOne({ loginId })
+    // store.dispath('admin/setAdmin',r)
 })
+
+// 根据用户名获取用户信息
+// 在浏览器缓存中，保存当前登录用户的角色编号
+// localStorage.setItem('roleId',res.roleId)
+
+
+
 </script>
 
 <style scoped="scoped">
@@ -143,6 +165,7 @@ onBeforeMount(async () => {
     width: 100vw;
     height: 100vh;
     display: flex;
+    /* background-color: aqua; */
 }
 
 .container .left {
@@ -160,7 +183,12 @@ onBeforeMount(async () => {
 .container .left .logo div {
     color: #fff;
     font-size: 18px;
+    /* border: 1px solid rgba(88, 86, 86, 0.544); */
+    /* padding: 4px 10px; */
     border-radius: 4px;
+    /* widows: 60px; */
+    /* height: 40px; */
+    /* 不收缩 */
     flex-shrink: 0;
 }
 
@@ -169,6 +197,7 @@ onBeforeMount(async () => {
     flex: 1;
     display: flex;
     flex-direction: column;
+    /* background-color: blue; */
 }
 
 .container .right .top {
@@ -179,6 +208,7 @@ onBeforeMount(async () => {
 
 .container .right .bottom {
     flex: 1;
+    /* background-color: rgb(21, 200, 39); */
 }
 
 .bottom {
