@@ -57,7 +57,7 @@
                         <el-menu-item index="/layout/email">邮件</el-menu-item>
                         <el-menu-item index="/layout/message">消息</el-menu-item>
 
-                        <el-sub-menu index="4">
+                        <el-sub-menu>
                             <template #title>{{ log.admin.name }}</template>
                             <el-menu-item index="/layout/mine">个人中心</el-menu-item>
                             <el-menu-item @click="$router.push('layout/resetPwd')">修改密码</el-menu-item>
@@ -66,8 +66,16 @@
 
                         <el-sub-menu index="5">
                             <template #title>切换皮肤</template>
-                            <el-menu-item @click="changeTheme(index)" :index="'4-' + (index + 1)"
-                                v-for="(item, index) in store.colors" :key="item.index">{{ item.name }}</el-menu-item>
+                            <el-menu-item 
+                                @click="changeTheme(index)" 
+                                :index="'4-' + (index + 1)"
+                                v-for="(item, index) in store.colors" 
+                                :key="item.index">{{ item.name }}</el-menu-item>
+                            <!-- <el-menu-item 
+                                @click="changeTheme(item.colorId)" 
+                                v-for="item in store.colors" 
+                                :key="item.colorId">{{ item.name }}
+                            </el-menu-item> -->
                         </el-sub-menu>
 
                     </el-menu>
@@ -119,15 +127,16 @@ let currentThemeColor = computed(() => {
 })
 
 // 切换主题的方法
-let changeTheme = (index) => {
+let changeTheme = (colorId) => {
     // 将获取到的颜色主题保存到浏览器缓存中
-    localStorage.setItem('colorName', store.colors[index].name)
-    localStorage.setItem('color', store.colors[index].color)
+    // localStorage.setItem('colorName', store.colors[index].name)
+    // localStorage.setItem('color', store.colors[index].color)
     // 根据index,获取对应的颜色主题
-    let { name, color } = store.colors[index]
+    // let { name, color } = store.colors[index]
     // 将该颜色主题赋值给当前颜色主题
-    store.currentThemeColor.name = name;
-    store.currentThemeColor.color = color;
+    // store.currentThemeColor.name = name;
+    // store.currentThemeColor.color = color;
+    console.log(colorId)
 }
 
 // 退出系统
@@ -155,8 +164,6 @@ onBeforeMount(async () => {
 // 根据用户名获取用户信息
 // 在浏览器缓存中，保存当前登录用户的角色编号
 // localStorage.setItem('roleId',res.roleId)
-
-
 
 </script>
 
@@ -191,7 +198,6 @@ onBeforeMount(async () => {
     /* 不收缩 */
     flex-shrink: 0;
 }
-
 
 .container .right {
     flex: 1;

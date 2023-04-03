@@ -164,7 +164,7 @@ let loadRoleList = async () => {
     let r = await roleList();
     // console.log(r)
     // 在角色信息数组开头处添加一条信息
-    r.unshift({ roleId: 0, roleName: "请选择角色" });
+    r.unshift({ roleId: 0, roleName: "全部" });
     data.roleList = r;
 }
 

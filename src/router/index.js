@@ -14,6 +14,7 @@ import RoomType from '../views/roomType/RoomType.vue'
 import Room from '../views/room/Room.vue'
 // import Test from '../views/Test.vue'
 import Permission from '../views/permission/Permission.vue'
+import Guest from '../views/guest/Guest.vue'
 
 // 导入pinia
 import { defineStore } from 'pinia'
@@ -38,6 +39,7 @@ const routes = [
     },
     {
         path: '/layout',
+        redirect: '/layout/home',
         name: 'Layout',
         meta: {
             title: '酒店管理系统'
@@ -128,6 +130,15 @@ const routes = [
                 //     title: '客房管理'
                 // },
                 component: Room
+            },
+            // 顾客管理
+            {
+                path: 'guest',
+                name: 'Guest',
+                // meta: {
+                //     title: '顾客管理'
+                // },
+                component: Guest
             },
             // 权限管理
             {
