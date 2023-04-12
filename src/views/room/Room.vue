@@ -11,9 +11,9 @@
             <el-option v-for="item in data.roomStateList" :key="item.roomStateId" :label="item.roomStateName"
                 :value="item.roomStateId" />
         </el-select>
-        <el-button size="mini" type="success" @click="loadTable" style="margin-left:10px">查询</el-button>
-        <el-button type="info">导出excel</el-button>
-        <el-button size="mini" type="primary" @click="data.drawer = true">添加</el-button>
+        <el-button plain type="success" @click="loadTable" style="margin-left:10px">查询</el-button>
+        <el-button plain type="info">导出excel</el-button>
+        <el-button plain type="primary" @click="data.drawer = true">添加</el-button>
     </div>
 
     <!-- 表格区域 -->
@@ -34,13 +34,13 @@
         </el-table-column>
         <el-table-column label="操作" width="260">
             <template #default="scope">
-                <el-button size="mini" type="primary" @click="openDialog(scope.row)">
+                <el-button plain type="primary" @click="openDialog(scope.row)">
                     照片
                 </el-button>
-                <el-button size="mini" type="warning" @click="handleEdit(scope.row)">
+                <el-button plain type="warning" @click="handleEdit(scope.row)">
                     编辑
                 </el-button>
-                <el-button size="mini" type="danger" @click="handleDelete(scope.row)">
+                <el-button plain type="danger" @click="handleDelete(scope.row)">
                     删除
                 </el-button>
             </template>
@@ -49,41 +49,51 @@
 
     <!-- 分页 -->
     <div class="pagination">
-        <el-pagination background layout="prev, pager, next" :page-size="data.pageSize" :total="data.total"
+        <el-pagination 
+            background layout="prev, pager, next" 
+            :page-size="data.pageSize" 
+            :total="data.total"
             v-model:current-page="data.pageIndex" />
     </div>
 
     <!-- 抽屉区域 -->
-    <el-drawer v-model="data.drawer" direction="rtl" size='30%'>
+    <el-drawer v-model="data.drawer" direction="rtl" :before-close="drawerClose" size='30%'>
         <template #header>
             <h4>{{ data.isAdd ? '添加房间' : '修改房间' }}</h4>
         </template>
 
         <div class="item">
             <span>房间号:</span>
-            <el-input size="mini" v-model="data.formData.roomId" />
+            <el-input v-model="data.formData.roomId" />
         </div>
         <div class="item">
-            <span>类型:</span>
+            <span style="width:80px">类型:</span>
             <el-select v-model="data.formData.roomTypeId" class="m-2">
-                <el-option v-for="item in data.roomTypeList" :key="item.roomTypeId" :label="item.roomTypeName"
-                    :value="item.roomTypeId" />
+                <el-option 
+                    v-for="item in data.roomTypeList" 
+                    :key="item.roomTypeId" 
+                    :label="item.roomTypeName"
+                    :value="item.roomTypeId"/>
             </el-select>
         </div>
         <div class="item">
-            <span>状态:</span>
+            <span style="width:80px">状态:</span>
             <el-select v-model="data.formData.roomStateId" class="m-2">
-                <el-option v-for="item in data.roomStateList" :key="item.roomStateId" :label="item.roomStateName"
-                    :value="item.roomStateId" />
+                <el-option 
+                    v-for="item in data.roomStateList" 
+                    :key="item.roomStateId" 
+                    :label="item.roomStateName"
+                    :value="item.roomStateId"/>
             </el-select>
         </div>
         <div class="item">
             <span>房间描述:</span>
-            <QuillEditor v-if="data.drawer" contentType="html" theme="snow" style="height:30px" />
+            <el-input type="text" v-model="data.formData.description">
+            </el-input>
         </div>
         <div class="item">
-            <el-button size="mini" type="success" @click="editForm">{{ data.isAdd ? '添加' : '修改' }}</el-button>
-            <el-button size="mini" type="default" @click="clearFormData">取消</el-button>
+            <el-button plain type="success" @click="editForm">确定</el-button>
+            <el-button plain type="default" @click="clearFormData">取消</el-button>
         </div>
     </el-drawer>
 
@@ -123,8 +133,8 @@ import { list as roomStateList, listToUpdate as roomStateList2 } from '../../api
 // 导入房间信息列表
 import { list as roomList } from '../../api/room'
 
-// 删除房间信息
-import { del } from '../../api/room'
+// 添加、删除房间信息
+import { add,update,del } from '../../api/room'
 
 // 导入上传和查看房间照片地址
 import { room_upload_url,room_photo_base_url} from '../../config/conster'
@@ -160,9 +170,9 @@ let data = reactive({
     //表单数据
     formData: {
         roomId: '',
-        description: '',
-        roomStateId: 0,
         roomTypeId: 0,
+        roomStateId: 0,
+        description: '',
     },
     // 是否显示弹出层
     dialogVisible: false,
@@ -242,8 +252,11 @@ let editForm = async () => {
     }
     // 如果执行成功
     if (r) {
+        clearFormData()
         // 刷新表格信息
         loadTable()
+        //关闭抽屉
+        data.drawer = false
     }
 }
 
@@ -258,7 +271,7 @@ let clearFormData = () => {
 //关闭抽屉事件
 let drawerClose = () => {
     //关闭抽屉
-    data.openDrawer = false
+    data.drawer = false
     data.isAdd = true
     // 调用清空表单数据的方法
     clearFormData()
@@ -273,7 +286,7 @@ let handleEdit = (row) => {
     // 设置为修改操作
     data.isAdd = false
     // 打开抽屉
-    data.openDrawer = true
+    data.drawer = true
 }
 
 //执行删除的方法
@@ -386,4 +399,11 @@ watch(()=>data.dialogVisible,(val)=>{
         width: 100px;
     }
 }
+
+.pagination {
+    position: absolute;
+    bottom: 30px;
+}
+
+
 </style>

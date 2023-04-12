@@ -1,9 +1,7 @@
 <template>
     <div class="home">
         <div class="box" ref="box"></div>
-        <div class="box" ref="box2"></div>
-        <div class="box" ref="box3"></div>
-        <div class="box" ref="box4"></div>
+        <div id="main" style="width:200px;height: 100px;"></div>
     </div>
     
 </template>
@@ -60,6 +58,31 @@ watch(()=>data.totalTypePriceList,()=>{
         ],
     });
 })
+
+
+
+// onMounted(()=>{
+//     // 基于准备好的dom，初始化echarts实例
+//     var myChart = echarts.init(document.getElementById('main'));
+//     // 绘制图表
+//     myChart.setOption({
+//         title: {
+//             text: 'ECharts 入门示例'
+//         },
+//         tooltip: {},
+//         xAxis: {
+//             data: ['衬衫', '羊毛衫', '雪纺衫', '裤子', '高跟鞋', '袜子']
+//         },
+//         yAxis: {},
+//         series: [
+//             {
+//                 name: '销量',
+//                 type: 'bar',
+//                 data: [5, 20, 36, 10, 10, 20]
+//             }
+//         ]
+//     });
+// })
 </script>
 
 <style lang="less" scoped>
@@ -73,8 +96,8 @@ watch(()=>data.totalTypePriceList,()=>{
     align-items: space-between;
 }
 .box {
-    width: 48%;
-    height: 48%;
-    border: 1px solid red;
+    width: 1000px;
+    height: 400px;
+    // border: 1px solid red;
 }
 </style>

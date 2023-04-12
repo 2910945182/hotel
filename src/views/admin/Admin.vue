@@ -4,40 +4,46 @@
         <span style="margin-right:10px">角色:</span>
 
         <el-select v-model="data.roleId" class="m-2">
-            <el-option v-for="item in data.roleList" 
+            <el-option 
+                v-for="item in data.roleList" 
                 :key="item.roleId" 
                 :label="item.roleName" 
                 :value="item.roleId"/>
         </el-select>
 
-        <el-button size="mini" type="success" @click="loadTable" style="margin-left: 10px">查询</el-button>
-        <el-button size="mini" type="primary" @click="data.drawer = true;">添加</el-button>
+        <el-button plain type="success" @click="loadTable" style="margin-left: 10px">查询</el-button>
+        <el-button plain type="primary" @click="data.drawer = true;">添加</el-button>
     </div>
 
     <!-- 表格区域 -->
-    <el-table size="mini" :data="data.tableData" style="width: 100%; margin-top: 10px">
+    <el-table size="mini" :data="data.tableData" stripe style="width: 100%; margin-top: 10px">
         <el-table-column prop="id" label="编号" width="100" />
         <el-table-column prop="loginId" label="账号" width="100" />
         <el-table-column prop="name" label="姓名" width="100" />
         <el-table-column prop="phone" label="电话" width="120" />
+
         <el-table-column label="头像" width="100">
             <template #default="scope">
-                <el-image style="width: 50px; height: 50px;" :src="admin_photo_base_url + scope.row.photo" fit="cover" />
+                <el-image 
+                    style="width: 50px; height: 50px;" 
+                    :src="data.admin_photo_base_url + scope.row.photo" 
+                    fit="cover" />
             </template>
         </el-table-column>
+
         <el-table-column prop="role.roleName" label="角色" width="100" />
         <el-table-column label="操作">
             <template #default="scope">
-                <el-button size="mini" type="warning" @click="handleEdit(scope.row)">
+                <el-button plain type="warning" @click="handleEdit(scope.row)">
                     编辑
                 </el-button>
-                <el-button size="mini" type="danger" @click="handleDelete(scope.row)">
+                <el-button plain type="danger" @click="handleDelete(scope.row)">
                     删除
                 </el-button>
             </template>
         </el-table-column>
     </el-table>
-
+    
     <!-- 分页 -->
     <div class="pagination">
         <el-pagination 
@@ -48,7 +54,7 @@
     </div>
 
     <!-- 抽屉区域 -->
-    <el-drawer v-model="data.drawer" direction="rtl" size="30%">
+    <el-drawer v-model="data.drawer" :before-close="drawerClose" direction="rtl" size="30%">
         
         <template #header>
             <h4>{{ data.isAdd ? '添加账户' : '修改账户' }}</h4>
@@ -56,54 +62,64 @@
 
         <div class="item">
             <el-upload class="avatar-uploader" 
-                action="admin_upload_url" 
+                :action="data.admin_upload_url" 
                 :show-file-list="false"
                 :on-success="handleAvatarSuccess" 
                 :before-upload="beforeAvatarUpload">
-                <img v-if="data.imageUrl" :src="admin_photo_base_url + imageUrl" class="avatar" />
+
+                <img 
+                    v-if="data.FormData.photo" 
+                    :src="data.admin_photo_base_url + data.FormData.photo" 
+                    class="avatar" />
+
                 <el-icon v-else class="avatar-uploader-icon">
                     <Plus />
                 </el-icon>
+
             </el-upload>
         </div>
 
         <div class="item" v-if="data.isAdd">
             <span>账号:</span>
-            <el-input size="mini" v-model="data.FormData.loginId" />
+            <el-input v-model="data.FormData.loginId" />
         </div>
 
         <div class="item">
             <span>姓名:</span>
-            <el-input size="mini" v-model="data.FormData.name" />
+            <el-input v-model="data.FormData.name" />
         </div>
 
         <div class="item" v-if="data.isAdd">
             <span>密码:</span>
-            <el-input size="mini" type="password" v-model="data.FormData.loginPwd" />
+            <el-input type="password" v-model="data.FormData.loginPwd" />
         </div>
 
         <div class="item" v-if="data.isAdd">
             <span>确认密码:</span>
-            <el-input size="mini" type="password" v-model="data.FormData.loginPwd2" />
+            <el-input type="password" v-model="data.FormData.loginPwd2" />
         </div>
 
         <div class="item">
             <span>电话:</span>
-            <el-input size="mini" v-model="data.FormData.phone" />
+            <el-input v-model="data.FormData.phone" />
         </div>
 
         <div class="item">
-            <span>角色:</span>
+            <span style="width: 80px">角色:</span>
             <el-select v-model="data.FormData.roleId" class="m-2">
-                <el-option v-for="item in data.roleList" :key="item.roleId" :label="item.roleName" :value="item.roleId" />
+                <el-option 
+                    v-for="item in data.roleList" 
+                    :key="item.roleId" 
+                    :label="item.roleName" 
+                    :value="item.roleId" />
             </el-select>
         </div>
 
         <div class="item">
             <el-button size="mini" type="success" @click="editForm">
-                {{ data.isAdd ? "添加" : "修改"}}
+                确定
             </el-button>
-            <el-button size="mini" type="default" @click="clearFormData">取消</el-button>
+            <el-button plain type="default" @click="clearFormData">取消</el-button>
         </div>
     </el-drawer>
 
@@ -142,20 +158,20 @@ let data = reactive({
     isAdd: true,
     // 表单数据
     FormData: {
+        photo: "",
         loginId: "",
+        name: "",
         loginPwd: "",
         loginPwd2: "",
-        name: "",
         phone: "",
         roleId: "",
-        photo: "",
     },
     // 上传账户的地址
     admin_upload_url,
     // 查看账户头像地址
     admin_photo_base_url,
     // 上传成功后显示的图片地址
-    imageUrl: "",
+    // imageUrl: "",
 });
 
 // 加载角色数组信息
@@ -198,10 +214,11 @@ watch(
 );
 
 // 头像上传成功调用的函数
-let hanforeAvatarSuccess = (res, file) => {
+let handleAvatarSuccess = (res) => {
     let { filename, success } = res;
     if (success) {
-        data.imageUrl = filename;
+        // 获取上传到服务器上的图片的名称
+        data.FormData.photo = filename;
     }
 };
 
@@ -244,6 +261,8 @@ let editForm = async () => {
     if (r) {
         // 刷新表格信息
         loadTable();
+        //关闭抽屉
+        data.drawer = false
     }
 };
 
@@ -271,18 +290,22 @@ let drawerClose = () => {
 //执行修改的方法
 let handleEdit = (row) => {
     // 获取当前账户信息，并赋值给表单数据
+    console.log(row.photo)
     data.FormData = { ...row };
     // 设置为修改操作
     data.isAdd = false;
     // 打开抽屉
-    data.openDrawer = true;
+    data.drawer = true;
 };
 
 //执行删除的方法
 let handleDelete = async (row) => {
     // 获取角色编号
-    let { id } = row;
-    let r = await del({ id });
+    let { id,photo } = row;
+    console.log(id)
+    console.log(photo)
+    let r = await del({ id,photo });
+    console.log(r)
     // 如果删除成功
     if (r) {
         // 刷新表格信息
@@ -295,29 +318,14 @@ let handleDelete = async (row) => {
 <style lang="less" scoped>
 .pagination {
     margin-top: 10px;
+    position: absolute;
+    bottom: 30px;
 }
-
-.avatar-uploader {
-    border: 1px dashed var(--el-border-color);
-    border-radius: 6px;
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
-    transition: var(--el-transition-duration-fast);
+.avatar-uploader .avatar {
+  width: 178px;
+  height: 178px;
+  display: block;
 }
-
-.avatar-uploader:hover {
-    border-color: var(--el-color-primary);
-}
-
-.el-icon.avatar-uploader-icon {
-    font-size: 28px;
-    color: #8c939d;
-    width: 178px;
-    height: 178px;
-    text-align: center;
-}
-
 .item {
     display: flex;
     margin-top: 10px;
@@ -325,5 +333,28 @@ let handleDelete = async (row) => {
     span {
         width: 100px;
     }
+}
+</style>
+
+<style>
+.avatar-uploader .el-upload {
+  border: 1px dashed var(--el-border-color);
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: var(--el-transition-duration-fast);
+}
+
+.avatar-uploader .el-upload:hover {
+  border-color: var(--el-color-primary);
+}
+
+.el-icon.avatar-uploader-icon {
+  font-size: 28px;
+  color: #8c939d;
+  width: 178px;
+  height: 178px;
+  text-align: center;
 }
 </style>

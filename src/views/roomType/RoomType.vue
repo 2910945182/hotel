@@ -1,11 +1,11 @@
 <template>
     <!-- 搜索区域 -->
     <div class="search">
-        <el-button size="mini" type="primary" @click="data.drawer = true">添加</el-button>
+        <el-button plain type="primary" @click="data.drawer = true">添加</el-button>
     </div>
 
     <!-- 表格区域 -->
-    <el-table :data="data.tableData" style="width: 100%">
+    <el-table :data="data.tableData" stripe style="width: 100%">
         <el-table-column prop="roomTypeId" label="编号" width="100" />
         <el-table-column prop="roomTypeName" label="类型" width="100" />
         <el-table-column prop="roomTypePrice" label="价格" width="100" />
@@ -13,10 +13,10 @@
 
         <el-table-column label="操作">
             <template #default="scope">
-                <el-button size="mini" type="warning" @click="handleEdit(scope.$index, scope.row)">
+                <el-button plain type="warning" @click="handleEdit(scope.row)">
                     编辑
                 </el-button>
-                <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">
+                <el-button plain type="danger" @click="handleDelete(scope.row)">
                     删除
                 </el-button>
             </template>
@@ -24,40 +24,35 @@
     </el-table>
 
     <!-- 抽屉区域 -->
-    <el-drawer v-model="data.drawer" size='30%'>
+    <el-drawer v-model="data.drawer" :before-close="drawerClose" size='30%'>
 
         <template #header>
-            <h4>{{ data.isAdd ? '添加房间' : '修改角色' }}</h4>
+            <h4>{{ data.isAdd ? '添加房间' : '修改房间' }}</h4>
         </template>
 
         <div class="item">
-            <span>房型编号:</span>
-            <el-input size="mini" v-model="data.formData.roleName" />
-        </div>
-
-        <div class="item">
-            <span>房型类型:</span>
-            <el-input size="mini" />
+            <span>房型名称:</span>
+            <el-input v-model="data.formData.roomTypeName" />
         </div>
 
         <div class="item">
             <span>床位价格:</span>
-            <el-input size="mini" />
+            <el-input v-model="data.formData.roomTypePrice" />
         </div>
 
         <div class="item">
             <span>床位数:</span>
-            <el-input size="mini" />
+            <el-input v-model="data.formData.bedNum" />
         </div>
 
         <div class="item">
             <span>房型描述:</span>
-            <el-input size="mini" />
+            <el-input v-model="data.formData.typeDesciption" />
         </div>
 
         <div class="item">
-            <el-button size="mini" type="success" @click="editForm">{{ data.isAdd ? '添加' : '修改' }}</el-button>
-            <el-button size="mini" type="default" @click="clearFormData">取消</el-button>
+            <el-button plain type="success" @click="editForm">确定</el-button>
+            <el-button plain type="default" @click="clearFormData">取消</el-button>
         </div>
 
     </el-drawer>
@@ -67,7 +62,7 @@
 <script setup>
 import { reactive } from 'vue'
 //导入操作房间类型的API方法
-import { list,del } from '../../api/roomType.js'
+import { list,add,del } from '../../api/roomType.js'
 
 //定义数据
 let data = reactive({
@@ -79,7 +74,10 @@ let data = reactive({
     isAdd: true,
     //表单数据
     formData: {
-        roleName: ''
+        roomTypeName: '',
+        roomTypePrice: '',
+        bedNum: '',
+        typeDesciption: '',
     }
 });
 
@@ -112,13 +110,17 @@ let editForm = async () => {
 let clearFormData = () => {
     // 清空表单数据
     data.formData = {
-        roleName: ''
+        roomTypeName: '',
+        roomTypePrice: '',
+        bedNum: '',
+        typeDesciption: '',
     }
 }
+
 //关闭抽屉事件
 let drawerClose = () => {
     //关闭抽屉
-    data.openDrawer = false
+    data.drawer = false
     data.isAdd = true
     // 调用清空表单数据
     clearFormData()
@@ -131,7 +133,7 @@ let handleEdit = (row) => {
     // 设置为修改操作
     data.isAdd = false
     // 打开抽屉
-    data.openDrawer = true
+    data.drawer = true
 }
 
 //执行删除的方法

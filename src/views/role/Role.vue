@@ -1,23 +1,23 @@
 <template>
     <!-- 搜索区域 -->
     <div class="search">
-        <el-button size="mini" type="primary" @click="data.drawer = true">添加</el-button>
+        <el-button plain type="primary" @click="data.drawer = true">添加</el-button>
     </div>
     
     <!-- 表格区域 -->
-    <el-table size="mini" :data="data.tableData" style="width: 100%">
+    <el-table size="mini" :data="data.tableData" stripe style="width: 100%">
         <el-table-column prop="roleId" label="编号" width="180" />
         <el-table-column prop="roleName" label="角色" width="180" />
 
         <el-table-column label="操作">
             <template #default="scope">
-                <el-button size="mini" type="success">
+                <el-button type="success" plain>
                     设置权限
                 </el-button>
-                <el-button size="mini" type="warning" @click="handleEdit(scope.$index, scope.row)">
+                <el-button type="warning" @click="handleEdit(scope.row)" plain>
                     编辑
                 </el-button>
-                <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">
+                <el-button type="danger" plain @click="handleDelete(scope.row)">
                     删除
                 </el-button>
             </template>
@@ -25,7 +25,7 @@
     </el-table>
 
     <!-- 抽屉区域 -->
-    <el-drawer v-model="data.drawer" direction="rtl" size='30%' >
+    <el-drawer v-model="data.drawer" direction="rtl" :before-close="drawerClose" size='30%' >
 
         <template #header>
             <h4>{{ data.isAdd ? '添加角色' : '修改角色' }}</h4>
@@ -37,8 +37,8 @@
         </div>
 
         <div class="item">
-            <el-button size="mini" type="success" @click="editForm">{{ data.isAdd ? '添加' : '修改' }}</el-button>
-            <el-button size="mini" type="default" @click="clearFormData">取消</el-button>
+            <el-button plain type="success" @click="editForm">确定</el-button>
+            <el-button plain type="default" @click="clearFormData">取消</el-button>
         </div>
     </el-drawer>
     
@@ -47,7 +47,7 @@
 <script setup>
 import { reactive } from 'vue'
 //导入操作角色的API方法
-import { list, add, update } from '../../api/role.js'
+import { list, add, update, del } from '../../api/role.js'
 
 //定义数据
 let data = reactive({
@@ -85,6 +85,10 @@ let editForm = async () => {
     if (r) {
         // 刷新表格信息
         loadTable()
+        // 清空表单数据
+        clearFormData()
+        //关闭抽屉
+        data.drawer = false
     }
 }
 
@@ -95,10 +99,11 @@ let clearFormData = () => {
         roleName: ''
     }
 }
+
 //关闭抽屉事件
 let drawerClose = () => {
     //关闭抽屉
-    data.openDrawer = false
+    data.drawer = false
     data.isAdd = true
     // 调用清空表单数据的方法
     clearFormData()
@@ -111,7 +116,7 @@ let handleEdit = (row) => {
     // 设置为修改操作
     data.isAdd = false
     // 打开抽屉
-    data.openDrawer = true
+    data.drawer = true
 }
 
 //执行删除的方法

@@ -6,8 +6,17 @@ export const useLoginStore = defineStore('login', {
         return { 
             // 用于保存当前登录账户信息
             admin:{
-                name: '管理员',
-                role: {}
+                id: '',
+                loginId: '',
+                loginPwd: '',
+                name: '',
+                phone: '',
+                photo: '',
+                role: {
+                    // 当前角色权限
+                    roleId : '', 
+                    roleName: ''
+                }
             }
         }
     },

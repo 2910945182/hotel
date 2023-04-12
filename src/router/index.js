@@ -12,12 +12,11 @@ import ResetPwd from '../views/admin/ResetPwd.vue'
 import Error404 from '../views/Error404.vue'
 import RoomType from '../views/roomType/RoomType.vue'
 import Room from '../views/room/Room.vue'
-// import Test from '../views/Test.vue'
+import Test from '../views/Test.vue'
 import Permission from '../views/permission/Permission.vue'
 import Guest from '../views/guest/Guest.vue'
 
-// 导入pinia
-import { defineStore } from 'pinia'
+import { useLoginStore } from '../store/admin.js'
 
 const routes = [
     {
@@ -39,11 +38,11 @@ const routes = [
     },
     {
         path: '/layout',
-        redirect: '/layout/home',
         name: 'Layout',
         meta: {
             title: '酒店管理系统'
         },
+        redirect: { name: 'Home' },
         component: Layout,
         children: [
             // 首页
@@ -51,7 +50,7 @@ const routes = [
                 path:'home',
                 name:'Home',
                 meta: {
-                    title: '首页'
+                    title: '营业统计'
                 },
                 component: Home
             },
@@ -97,7 +96,8 @@ const routes = [
                 name: 'Role',
                 meta: {
                     // 只有角色编号为 1 的管理员才能访问
-                    title: '角色管理',permission:[1],
+                    title: '角色管理',
+                    permission: [1],
                     // 设置该路由权限
                     role: [1]
                 },
@@ -126,18 +126,18 @@ const routes = [
             {
                 path: 'room',
                 name: 'Room',
-                // meta: {
-                //     title: '客房管理'
-                // },
+                meta: {
+                    title: '客房管理'
+                },
                 component: Room
             },
             // 顾客管理
             {
                 path: 'guest',
                 name: 'Guest',
-                // meta: {
-                //     title: '顾客管理'
-                // },
+                meta: {
+                    title: '顾客管理'
+                },
                 component: Guest
             },
             // 权限管理
@@ -161,10 +161,10 @@ const routes = [
     //     component: Error404
     // },
     // 测试页面
-    // {
-    //     path: '/test',
-    //     component: Test
-    // }
+    {
+        path: '/test',
+        component: Test
+    }
 ]
 
 const router = createRouter({
@@ -178,21 +178,28 @@ import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
 
 // 定义路由导航前置守卫
-// router.beforeEach((to,from,next)=>{
+router.beforeEach((to,from,next)=>{
     // 开启进度条
     // NProgress.start();
 
+    // 设置网页的title属性值
+    if(to.meta && to.meta.title) {
+        document.title = to.meta.title
+    }
+
     // 判断权限
-    // if(to.meta && to.meta.role) {
-    //     // 获取当前登录用户的角色id
-    //     let roleId = useStore().state.admin.admin.role.roleId
-    //     // 判断当前登录用户有无访问该路由的权限
-    //     if(to.meta.role.includes(roleId)){
-    //         next()
-    //     }
-    // } else {
-    //     next()
-    // }
+    if(to.meta && to.meta.role) {
+        // 获取当前登录用户的角色id
+        let roleId = useLoginStore().admin.role.roleId
+        console.log(roleId)
+        // 判断当前登录用户有无访问该路由的权限
+        if(to.meta.role.includes(roleId)) {
+            next()
+        }
+    } else {
+        next()
+    }
+    
     // 表示需要验证权限
     // if(to.meta && to.meta.permission) {
     //     if(to.meta.permission.includles(parseInt(localStorage.getItem('roleId')))) {
@@ -204,7 +211,7 @@ import 'nprogress/nprogress.css'
     //     调用next()方法，表示路由继续往下走
     //     next()
     // }
-// })
+})
 
 // 定义路由导航后置守卫
 // router.afterEach((to,from)=>{
