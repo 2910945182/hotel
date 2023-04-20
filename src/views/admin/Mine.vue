@@ -12,9 +12,6 @@
                 <el-descriptions-item>
                     <template #label>
                         <div class="cell-item">
-                            <el-icon :style="iconStyle">
-                                <user />
-                            </el-icon>
                             账号
                         </div>
                     </template>
@@ -24,21 +21,6 @@
                 <el-descriptions-item>
                     <template #label>
                         <div class="cell-item">
-                            <el-icon :style="iconStyle">
-                                <iphone />
-                            </el-icon>
-                            密码
-                        </div>
-                    </template>
-                    {{ account.admin.loginPwd }}
-                </el-descriptions-item>
-
-                <el-descriptions-item>
-                    <template #label>
-                        <div class="cell-item">
-                            <el-icon :style="iconStyle">
-                                <iphone />
-                            </el-icon>
                             姓名
                         </div>
                     </template>
@@ -48,9 +30,6 @@
                 <el-descriptions-item>
                     <template #label>
                         <div class="cell-item">
-                            <el-icon :style="iconStyle">
-                                <iphone />
-                            </el-icon>
                             电话
                         </div>
                     </template>
@@ -60,9 +39,6 @@
                 <el-descriptions-item>
                     <template #label>
                         <div class="cell-item">
-                            <el-icon :style="iconStyle">
-                                <iphone />
-                            </el-icon>
                             角色
                         </div>
                     </template>
@@ -76,23 +52,17 @@
             
         </el-card>
 
-        <!-- <el-card class="box-card03">
+        <el-card class="box-card03">
             
-        </el-card> -->
-
-   
-
-
+        </el-card>
 
     </div>
 </template>
 
 <script setup>
 import { admin_photo_base_url } from '../../config/conster'
-
 import { useLoginStore } from '../../store/admin.js'
 
-// 获取全局状态管理
 let account = useLoginStore()
 
 </script>
@@ -101,7 +71,6 @@ let account = useLoginStore()
 .box {
     height: calc(100vh - 80px);
     position: relative;
-    // background: rgb(177, 78, 78);
 }
 
 .box-card01 {
@@ -110,21 +79,19 @@ let account = useLoginStore()
 }
 
 .box-card02 {
-    width: 990px;
+    width: 1010px;
     height: 100px;
     position: absolute;
     top: 0;
     right: 0;
-    // background: rgb(55, 144, 53);
 }
 
 .box-card03 {
-    width: 990px;
-    height: 570px;
+    width: 1010px;
+    height: 600px;
     position: absolute;
     bottom: 0;
     right: 0;
-    // background: rgb(55, 144, 53);
 }
 
 .margin-top {

@@ -13,12 +13,12 @@ import App from './App.vue'
 // 后台接口完成后，注释如下一行
 // import './mock/index'
 
-import VueQuillEditor from 'vue-quill-editor'
+// import VueQuillEditor from 'vue-quill-editor'
 
 // require styles
-import 'quill/dist/quill.core.css'
-import 'quill/dist/quill.snow.css'
-import 'quill/dist/quill.bubble.css'
+// import 'quill/dist/quill.core.css'
+// import 'quill/dist/quill.snow.css'
+// import 'quill/dist/quill.bubble.css'
 
 const app = createApp(App)
 
@@ -34,7 +34,7 @@ app.use(pinia)
 
 app.use(ElementPlus)
 
-app.use(VueQuillEditor)
+// app.use(VueQuillEditor)
 
 app.use(ElementPlus, { locale: zhCn, })
 

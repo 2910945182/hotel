@@ -1,5 +1,4 @@
 // 导入mock
-import { options } from 'less'
 import Mock from 'mockjs'
 
 // 设置延迟时间
@@ -19,10 +18,6 @@ const { roleList } = Mock.mock({
 Mock.mock(/Role\/List/,"get",(options)=>{
     return roleList
 })
-
-// Mock.mock(/post/,'post',(options)=>{
-//     return {}
-// })
 
 Mock.mock(/Role\/Add/,"post",(options)=>{
     let { body } = options

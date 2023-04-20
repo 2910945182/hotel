@@ -24,11 +24,8 @@
 </template>
 
 <script setup>
-// 导入组合式api
 import { reactive } from 'vue';
-// 导入api方法
 import { resetPwd } from '../../api/admin'
-// 导入全局状态管理
 import { useLoginStore } from '../../store/admin.js'
 
 let data = reactive({
@@ -38,15 +35,12 @@ let data = reactive({
     newLoginPwd2: '',
 })
 
-// 提交表单数据
 let editForm = async () => {
-    // 获取当前登录账户的id信息
     data.id = useLoginStore().admin.id
     await resetPwd(data)
     clearFormData()
 }
 
-// 清空表单数据
 let clearFormData = () => {
     data.oldLoginPwd = ''
     data.newLoginPwd = ''

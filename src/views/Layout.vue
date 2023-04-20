@@ -1,55 +1,47 @@
 <template>
-    <!-- :style="{ background: currentThemeColor }" -->
+
     <div class="container">
-        <div class="left" style="background-color: #606266;">
+        <div class="left" :style="{ background: currentThemeColor }">
 
             <div class="logo">
                 <h3>{{ '酒店管理系统' }}</h3>
             </div>
 
             <el-col>
-                <!-- :background-color="currentThemeColor"  -->
                 <el-menu 
                     active-text-color="#ffd04b" 
-                    background-color="#606266"
+                    :background-color="currentThemeColor" 
                     class="el-menu-vertical-demo"
                     text-color="#fff" 
                     style="border: 0" 
                     router>
 
-                    <el-sub-menu index="1">
-                        <template #title>
-                            <span>账户管理</span>
-                        </template>
-                        <el-menu-item index="/layout/role" v-if="useLoginStore().admin.role.roleId==1">角色</el-menu-item>
-                        <el-menu-item index="/layout/admin">账户</el-menu-item>
-                    </el-sub-menu>
+                    <el-menu-item index="/layout/role" v-if="useLoginStore().admin.role.roleId == 1">
+                        <el-icon><User /></el-icon>
+                        <span>角色管理</span>
+                    </el-menu-item>
 
-                    <el-sub-menu index="2">
-                        <template #title>
-                            <span>客房管理</span>
-                        </template>
-                        <!-- v-if="this.store.state.admin.admin.roleId===1" -->
-                        <el-menu-item index="/layout/roomType">类型</el-menu-item>
-                        <el-menu-item index="/layout/room">房间</el-menu-item>
-                    </el-sub-menu>
+                    <el-menu-item index="/layout/admin" v-if="useLoginStore().admin.role.roleId == 1">
+                        <el-icon><Avatar /></el-icon>
+                        <span>账户管理</span>
+                    </el-menu-item>
 
-                    <el-sub-menu index="3">
-                        <template #title>
-                            <span>顾客管理</span>
-                        </template>
-                        <el-menu-item index="/layout/guest">顾客</el-menu-item>
-                    </el-sub-menu>
+                    <el-menu-item index="/layout/roomType" v-if="useLoginStore().admin.role.roleId == 1">
+                        <el-icon><Menu /></el-icon>
+                        <span>房间类型</span>
+                    </el-menu-item>
 
-                    <!-- v-if="this.store.state.admin.admin.roleId===1" -->
-                    <el-sub-menu index="4">
-                        <template #title>
-                            <span>权限管理</span>
-                        </template>
-                        <el-menu-item index="/layout/permission">权限</el-menu-item>
-                    </el-sub-menu>
+                    <el-menu-item index="/layout/room" v-if="useLoginStore().admin.role.roleId == 1">
+                        <el-icon><House /></el-icon>
+                        <span>房间管理</span>
+                    </el-menu-item>
 
-                    <el-menu-item index="/layout/home">
+                    <el-menu-item index="/layout/guest">
+                        <el-icon><Document /></el-icon>
+                        <span>订单管理</span>
+                    </el-menu-item>
+
+                    <el-menu-item index="/layout/home" v-if="useLoginStore().admin.role.roleId == 1">
                         <el-icon><Histogram /></el-icon>
                         <span>营业统计</span>
                     </el-menu-item>
@@ -59,39 +51,42 @@
                         <span>个人中心</span>
                     </el-menu-item>
 
+                    <el-menu-item index="/layout/resetPwd">
+                        <el-icon><UserFilled /></el-icon>
+                        <span>修改密码</span>
+                    </el-menu-item>
+
+                    <el-menu-item>
+                        <div @click="exit" style="width:100%">
+                            <el-icon><SwitchButton /></el-icon>
+                            <span>退出</span>
+                        </div>
+                    </el-menu-item>
+
                 </el-menu>
             </el-col>
         </div>
 
         <div class="right">
-            <div class="top" style="border-bottom: 1px solid #606266;">
-                <div style="width:500px;">
-                    <el-menu :default-active="activeIndex1" class="el-menu-demo" mode="horizontal"
-                        :background-color="currentThemeColor" style="border: 0;height: 60px" text-color="red"
-                        active-text-color="#ffd04b" router>
-
-                        <el-menu-item index="/layout/email">邮件</el-menu-item>
-                        <el-menu-item index="/layout/message">消息</el-menu-item>
-
-                        <el-sub-menu index="4">
-                            <template #title>{{ log.admin.name }}</template>
-                            <el-menu-item index="/layout/resetPwd">修改密码</el-menu-item>
-                        </el-sub-menu>
+            <div class="top">
+                <div style="width:200px;">
+                    <el-menu 
+                        :default-active="activeIndex1" 
+                        class="el-menu-demo" 
+                        mode="horizontal"
+                        style="border: 0;height: 59px" 
+                        active-text-color="black" >
 
                         <el-sub-menu>
                             <template #title>切换主题</template>
-                            <!-- <el-menu-item 
-                                @click="changeTheme(index)" 
-                                :index="'4-' + (index + 1)"
-                                v-for="(item, index) in store.colors" 
-                                :key="item.index">
+                            <el-menu-item 
+                                @click="changeTheme(index)"
+                                v-for="(item,index) in store.colors" 
+                                :key="item.id"
+                                :index="item.index">
                                 {{ item.name }}
-                            </el-menu-item> -->
+                            </el-menu-item>
                         </el-sub-menu>
-
-                        <el-menu-item>
-                            <el-icon @click="exit"><SwitchButton /></el-icon>
-                        </el-menu-item>
 
                     </el-menu>
                 </div>
@@ -106,23 +101,16 @@
 </template>
 
 <script setup>
-import { reactive ,computed, onBeforeMount } from 'vue'
-import { useColorStore } from '../store/theme01'
+import { computed, onBeforeMount } from 'vue'
+import { useColorStore } from '../store/theme'
 import { useLoginStore } from '../store/admin'
-// 导入路由器对象
 import { useRouter } from 'vue-router'
-// 导入api方法
 import { getOne } from '../api/admin'
 
-// 返回一个全局状态管理对象
 let store = useColorStore()
-
 let log = useLoginStore()
-
-// 返回一个路由器对象
 let router = useRouter()
 
-// 获取浏览器缓存中的颜色
 if (localStorage.getItem('colorName') && localStorage.getItem('color')) {
     let color = {
         name: localStorage.getItem('colorName'),
@@ -131,53 +119,34 @@ if (localStorage.getItem('colorName') && localStorage.getItem('color')) {
     store.currentThemeColor.color = color.color
 }
 
-// 定义数据
-let data = reactive({
-    
-})
-
-// 从全局状态里面获取当前主题色
 let currentThemeColor = computed(() => {
     return store.currentThemeColor.color
 })
 
-// 切换主题的方法
 let changeTheme = (index) => {
-    // 将获取到的颜色主题保存到浏览器缓存中
     localStorage.setItem('colorName', store.colors[index].name)
     localStorage.setItem('color', store.colors[index].color)
-    // 根据index,获取对应的颜色主题
     let { name, color } = store.colors[index]
-    // 将该颜色主题赋值给当前颜色主题
     store.currentThemeColor.name = name;
     store.currentThemeColor.color = color;
 }
 
-// 退出系统
 let exit = () => {
-    // 清除所有浏览器缓存
     sessionStorage.clear()
     localStorage.clear()
-    // 跳转到登录页
     router.push('/login')
 }
 
-// 页面挂载之前
 onBeforeMount(async () => {
     let token = sessionStorage.getItem('token')
-    // 判断是否有token
-    // if(!token) {
-    //     router.push('/login')
-    // }
+    if(!token) {
+        router.push('/login')
+    }
 
-    // 获取登录账号
     let loginId = localStorage.getItem('loginId')
-    // 根据用户名获取用户信息
     let r = await getOne({ loginId })
     log.admin = r
-
-    // 在浏览器缓存中，保存当前登录用户的角色编号
-    localStorage.setItem('roleId',r.loginId)
+    localStorage.setItem('roleId',r.role.roleId)
 })
 
 </script>
@@ -206,34 +175,21 @@ onBeforeMount(async () => {
     align-content: center;
 }
 
-/* .container .left .logo div {
-    color: #fff;
-    font-size: 18px;
-    border: 1px solid rgba(88, 86, 86, 0.544);
-    padding: 4px 10px;
-    border-radius: 4px;
-    widows: 60px;
-    height: 40px;
-    不收缩
-    flex-shrink: 0;
-} */
 .container .right {
     flex: 1;
     display: flex;
     flex-direction: column;
-    /* background-color: blue; */
 }
 .container .right .top {
-    height: 60px;
+    height: 59px;
+    border-bottom: 1px solid #606266;
     display: flex;
     flex-direction: row-reverse;
 }
 
 .container .right .bottom {
     flex: 1;
-    /* background-color: rgb(21, 200, 39); */
 }
-
 .bottom {
     padding: 10px;
 }
@@ -244,5 +200,4 @@ onBeforeMount(async () => {
     width: 150px;
     min-width: 0;
 }
-
 </style>
